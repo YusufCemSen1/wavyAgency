@@ -39,6 +39,25 @@ scripts/                   seed and the `pnpm ingest` daily sync
 tests/                     Vitest: payout math, budget ceiling, concurrency, access control, ingest
 ```
 
+## Deploying
+
+Any host that runs Next.js against a Postgres URL. Two environment variables:
+
+| | |
+|---|---|
+| `DATABASE_URL` | Postgres connection string. A pooled/PgBouncer endpoint is detected automatically and prepared statements are turned off for it. |
+| `AUTH_SECRET` | 32+ random bytes. `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"` |
+
+Migrations aren't run at build time — point them at the deployed database once:
+
+```bash
+DATABASE_URL='<production url>' pnpm db:migrate
+DATABASE_URL='<production url>' pnpm db:seed    # optional; resets and reseeds
+```
+
+The session cookie is `Secure` in production, so the deployed app has to be served
+over HTTPS (running `pnpm build && pnpm start` over plain http will not hold a login).
+
 ## Commands
 
 | | |
