@@ -17,3 +17,8 @@ coverage/
 # Local tooling
 .claude/
 .neon
+.vercel
+
+# Local secrets. .env.example is committed on purpose — it documents the keys.
+.env*
+!.env.example
