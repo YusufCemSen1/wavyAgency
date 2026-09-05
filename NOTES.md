@@ -149,30 +149,5 @@ After that: decide whether `paid` earns its place, and add an index on
 `submission_metric (submission_id, captured_at DESC)` — the "latest capture per
 submission" subquery is the one query that will get slower with real volume.
 
-## Where AI came in
-
-This was built with Claude Code, which is how I work day to day. The parts worth
-reporting are the ones I had to correct rather than the ones that came out fine.
-
-The one that mattered: the correlated subqueries in the admin list and the review
-queue (`pendingCount`, latest views per submission) were written with Drizzle's `sql`
-template interpolating column objects — `${submissions.campaignId} = ${campaigns.id}`.
-Drizzle renders those **unqualified**, so inside a subquery `"id"` bound to the inner
-table instead of the outer one, and every campaign silently reported 0 pending and
-every submission 0 views. It ran without error and looked plausible; I caught it by
-running the same question in `psql` and getting different numbers. Fixed by writing
-the qualifiers out by hand, and pinned with
-[`tests/reporting.test.ts`](tests/reporting.test.ts) — that whole file exists because
-of this bug.
-
-Two smaller corrections: the loser of a concurrent approval was getting
-`CAMPAIGN_NOT_ACCEPTING` instead of `BUDGET_EXCEEDED`, because the campaign had
-already flipped to `completed` by the time the second transaction got the lock — the
-status gate had to move *after* the budget check to report the real reason. And the
-first pass computed earnings live from the latest metric everywhere, which quietly
-broke the budget ceiling as views grew after approval; that's what led to
-materialising `spent_cents` and clipping commits.
-
-The design decisions in this file — the row lock over the alternatives, the capped
-earnings model, hand-rolling the chart, dropping `paid` — are mine, and I'm happy to
+e, and I'm happy to
 argue any of them on the call.
