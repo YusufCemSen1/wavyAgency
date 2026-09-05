@@ -4,6 +4,11 @@ A cut-down clipping marketplace: brands post paid campaigns, creators submit cli
 admins approve them, and approved clips earn per 1,000 views until the campaign
 budget runs out.
 
+**Live: https://wavy-agency.vercel.app** — pick a user on the landing page.
+`admin@clipmarket.test` for the brand side, `casey@creators.test` for a creator.
+Seeded with five campaigns and ten days of metrics; "Micro-budget teaser" is there
+to show a campaign that spent its budget and closed itself.
+
 ## Setup
 
 Needs Node 20+, pnpm, and Docker.

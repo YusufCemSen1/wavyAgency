@@ -4,6 +4,8 @@ A cut-down clipping marketplace. Brands post paid campaigns, creators submit
 short-form clips, admins review them, and approved clips earn per 1,000 views up to
 the campaign budget.
 
+**Live: https://wavy-agency.vercel.app**
+
 See [NOTES.md](NOTES.md) for setup, the design decisions, and what was left out.
 
 ## Stack
